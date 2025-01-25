@@ -23,6 +23,9 @@ class Solution {
         
         // Step 2: Iterate through the array
         for (int i = 0; i < nums.length - 2; i++) {
+            if (i != 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
             int target = -nums[i]; // Target for the two-sum
             int left = i + 1;
             int right = nums.length - 1;
