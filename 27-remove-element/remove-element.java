@@ -1,27 +1,15 @@
 class Solution {
     public int removeElement(int[] nums, int val) {
-        // 1st approach: fast and slow pointer
-        // int i = 0;
-        // for (int j = 0; j < nums.length; j++){
-        //     if(nums[j]!=val){
-        //         nums[i] = nums[j];
-        //         i++;
-        //     }
-        // }
-        // return i;
+        int k = 0; // write pointer
 
-        // 2nd approach: put unnecessary elements in the back (when we have few invalid el.)
-        int i = nums.length-1;
-        int j = 0;
-        while(j<=i){
-            if (nums[j]==val){
-                nums[j] = nums[i];
-                i--;
-            }
-            else{
-                j++;
+        for (int i = 0; i < nums.length; i++) {
+            if (nums[i] != val) {
+                nums[k] = nums[i];
+                k++;
             }
         }
-        return j;
-    }       
+
+        return k;
+
+    }
 }
