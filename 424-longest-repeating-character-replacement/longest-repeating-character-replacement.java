@@ -14,7 +14,7 @@ class Solution {
             map.put(c, map.getOrDefault(c,0)+1);
             maxCount = Math.max(maxCount, map.get(c));
             //shrink window until valid (if needed)
-            while((right-left+1)-maxCount>k){
+            while(k<(right-left+1)-maxCount){
                 char removed = s.charAt(left); 
                 map.put(removed, map.get(removed)-1);
                 left++;
