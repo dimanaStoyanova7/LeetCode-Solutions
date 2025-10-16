@@ -11,11 +11,11 @@ class Solution(object):
         res = 0
 
         for b in range(limit_bits):
-            mask = 1 << b
+            mask = 1 << b #creating the bitmask set to 1 and all other bits to 0
             cnt = 0
             for x in candidates:
                 if x & mask:
                     cnt+=1
-                res = max(res, cnt)
+            res = max(res, cnt)
         return res
         
