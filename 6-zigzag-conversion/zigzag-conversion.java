@@ -1,23 +1,32 @@
 class Solution {
     public String convert(String s, int numRows) {
-        if(numRows == 1 || s.length()<=numRows) return s;
-        int currentRow = 0;
-        boolean goingDown = false;
-        //use array of stringBuilders
-        StringBuilder[] res = new StringBuilder[numRows];
-        for(int i = 0; i<numRows; i++){
-            res[i] = new StringBuilder();
+        if(numRows==1 || s.length()<numRows){
+            return s;
         }
-
-        //traverse sting and put characters in corresponding strings
-        for(char c : s.toCharArray()){
-            res[currentRow].append(c);
-            if(currentRow == 0 || currentRow == numRows - 1) goingDown = !goingDown;
-            currentRow += goingDown ? 1 : -1; 
+        StringBuilder[] result = new StringBuilder[numRows];
+        for (int i=0; i<numRows; i++){
+            result[i] = new StringBuilder();
+        }
+        int rowIndex = 0;
+        boolean goingUp = true;
+        for(char c: s.toCharArray()){
+            //check if we need to switch direction
+            if(rowIndex == 0 || rowIndex == numRows-1){
+                goingUp = !goingUp;
+            }
+            //add character at index
+            result[rowIndex].append(c);
+            //update index
+            if(goingUp){
+                rowIndex--;
+            }
+            else{
+                rowIndex++;
+            }
         }
         StringBuilder finalResult = new StringBuilder();
-        for (StringBuilder sb : res){
-            finalResult.append(sb.toString());
+        for( StringBuilder sb: result){
+            finalResult.append(sb);
         }
         return finalResult.toString();
     }
