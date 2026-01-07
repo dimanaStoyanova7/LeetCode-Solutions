@@ -11,7 +11,7 @@ class Solution {
                 left++;
             }
             set.add(current);
-            res = Math.max(res, set.size());
+            res = Math.max(res, right-left+1);
         }
         return res;
     }
