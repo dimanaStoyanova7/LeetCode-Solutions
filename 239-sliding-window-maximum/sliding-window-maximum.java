@@ -1,19 +1,28 @@
 class Solution {
+    // complexity space - o(n log n)
+    // complexity time - o(n) maximal
     public int[] maxSlidingWindow(int[] nums, int k) {
-        Deque<Integer> q = new LinkedList<>(); //will store indices
-        int[] res = new int[nums.length-k+1];
-        for (int i=0; i<nums.length; i++){
-            while(!q.isEmpty() && nums[q.getLast()]<nums[i]){
-                q.removeLast();
+        int n = nums.length;
+        // storing indices in monotonic order
+        Deque<Integer> dq = new ArrayDeque<>(); 
+        int[] res = new int[n-k+1];
+        for(int i = 0; i<n; i++){
+            int currentElement = nums[i];
+            //remove indices that are too old        
+            while(!dq.isEmpty() && dq.peekFirst()<= i - k){
+                dq.pollFirst();
             }
-            q.addLast(i);
-            if(q.getFirst()<i-k+1){
-                q.removeFirst();
+            //keep monotonicity
+            while(!dq.isEmpty() && currentElement>nums[dq.peekLast()]){
+                dq.pollLast();
             }
-            if (i >= k - 1) {
-                res[i - k + 1] = nums[q.getFirst()];
+            dq.addLast(i);
+            if(i>=k-1){
+                res[i-k+1] = nums[dq.peekFirst()];
+
             }
         }
         return res;
+    
     }
 }
