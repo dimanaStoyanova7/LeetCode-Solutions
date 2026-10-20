@@ -1,27 +1,25 @@
 class Solution {
     public int lengthOfLIS(int[] nums) {
-        // brute force approach : start from each index and count 
-
-        // dp approach: 
-        if (nums.length == 0) return 0;
-
-
-        int[] dp = new int[nums.length];
-
-        for (int i = 0; i < nums.length; i++) {
-            dp[i] = 1;
-        }
-
-        for(int i = 0; i < nums.length; i++){
-            for(int j=0; j<i; j++){
-                if(nums[j] < nums[i]) dp[i] = Math.max(dp[j]+1, dp[i]);
+        //tails[i] = has the best(smallest) ending of length i
+        //use binary search to find the highest i that could be extended to i+1
+        int n = nums.length;
+        int size = 0;
+        int tails[] = new int[n];
+        for(int i=0; i<n; i++){
+            int val = nums[i];
+            int low = 0;
+            int high = size;
+            while (low<high){
+                int mid = low+ (high-low)/2;
+                if(val<=tails[mid]){
+                    high = mid;
+                }else{
+                    low = mid+1;
+                }
             }
-        }
-        int res = 0;
-        for( int dpRes : dp){
-            res = Math.max(res, dpRes);
-        }
-        return res;
-
+            tails[low] = val;
+            if(low==size) size++;
+        } 
+        return size;
     }
 }
