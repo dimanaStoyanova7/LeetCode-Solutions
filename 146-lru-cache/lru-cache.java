@@ -1,77 +1,70 @@
 class LRUCache {
-    //hashmap key -> node with key and value
-    HashMap<Integer, Node> map;
+    private class Node{
+        int key;
+        int value;
+        Node prev;
+        Node next;
+        Node(int key, int value){
+            this.key = key;
+            this.value = value;
+        }
+    }
+    int capacity;
     Node head;
     Node tail;
-    int capacity;
+    Map<Integer, Node> valueToReference;
 
     public LRUCache(int capacity) {
-        map = new HashMap<Integer, Node>();
         head = new Node(0,0);
         tail = new Node(0,0);
         head.next = tail;
         tail.prev = head;
         this.capacity = capacity;
-    }
-    // add to front
-    public void addToList(Node node){
-        node.next = head.next;
-        node.next.prev = node;
-        head.next = node;
-        node.prev = head;
-    }
-    // remove from any given poisiton
-    public void removeFromList(Node node){
-       node.prev.next = node.next;
-       node.next.prev = node.prev;
+        valueToReference = new HashMap<>();
     }
     
-    /*
-     * when getting an element, we remove the element from list, and add it back to reflect on frequent use
-     */
     public int get(int key) {
-        if (!map.containsKey(key)) return -1;
-        Node node = map.get(key);
-        removeFromList(node);
-        addToList(node);
+        if (!valueToReference.containsKey(key)){
+            return -1;
+        }
+        Node node = valueToReference.get(key);
+        remove(node);                               
+        addToTail(node);
         return node.value;
     }
-    /*
-     * remove element if it exists : from map and from list
-     * then add element to both map and list,
-     * if capacity is exceed: fix
-     */
+    
     public void put(int key, int value) {
-        if (map.containsKey(key)){
-            Node node = map.get(key);
-            removeFromList(node);
-            addToList(node);
+        if(valueToReference.containsKey(key)){
+            Node node = valueToReference.get(key);
             node.value = value;
-        } else {
-            Node node = new Node(key, value);
-            addToList(node);
-            map.put(key, node);
+            remove(node);                          
+            addToTail(node);
+            return;
         }
-        if(map.size()>capacity){
-            //take node before tail and remove it from list and map
-            Node nodeToRemove = tail.prev;
-            tail.prev = nodeToRemove.prev;
-            tail.prev.next = tail;
-            map.remove(nodeToRemove.key);
+        else if(valueToReference.size()==capacity){
+            //remove front 
+            Node lru = head.next;
+            remove(lru);
+            valueToReference.remove(lru.key);
         }
-        
-    }
-}
-class Node{
-    int key;
-    int value;
-    Node prev;
-    Node next;
+        //add to tail
+        Node node = new Node(key, value);          
+        valueToReference.put(key, node);
+        addToTail(node);
 
-    public Node(int key, int value){
-        this.key = key;
-        this.value = value;
     }
+    private void remove(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    private void addToTail(Node node) {
+        node.prev = tail.prev;
+        node.next = tail;
+        tail.prev.next = node;
+        tail.prev = node;
+    }
+
 }
 
 /**
