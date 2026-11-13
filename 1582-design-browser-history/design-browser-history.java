@@ -1,44 +1,33 @@
 class BrowserHistory {
-    String current;
-    Deque<String> next;
-    Deque<String> previous;
+    List<String> history;
+    int current;
+    int last;
 
     public BrowserHistory(String homepage) {
-        previous = new ArrayDeque<>();
-        next = new ArrayDeque<>();
-        current = homepage;
+        history = new ArrayList<>();
+        history.add(homepage);
+        current = 0;
+        last = 0;
     }
     
     public void visit(String url) {
-        //change current
-        //put old current on 'go back' stack
-        previous.push(current);
-        current = url;
-        next.clear();
+        current++;
+        if(current<history.size()){
+            history.set(current, url);
+        }else{
+            history.add(url);
+        }
+        last=current;
     }
     
     public String back(int steps) {
-        //change current
-        //put old current on 'go forward' stack
-        for(int i=0; i<steps;i++){
-            if(previous.isEmpty()){
-                return current;
-            } 
-            next.push(current);
-            current = previous.pop();
-        }
-        return current;
+        current = Math.max(0, current-steps);
+        return history.get(current);
     }
     
     public String forward(int steps) {
-        for(int i=0; i<steps;i++){
-            if(next.isEmpty()){
-                return current;
-            } 
-            previous.push(current);
-            current = next.pop();
-        }
-        return current;
+        current = Math.min(current+steps, last);
+        return history.get(current);
     }
 }
 
